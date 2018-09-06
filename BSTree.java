@@ -21,34 +21,80 @@ public class BSTree implements BSTOper {
 	}
 
 	// Peker & Konstruktører til BSTree
-	private Node root;
+	Node root;
 
-	public BSTree() {
+	public BSTree() {	// Konstruktør for et tomt tre
 		root = null;
 	}
 
-	public BSTree(int rootValue, BSTree left, BSTree right) {
+	public BSTree(int rootValue) {	// Konstruktør for et tre med en referanse til root Node.
 		root = new Node();
 		root.value = rootValue;
-		root.left = left.root;
-		root.right = right.root;
 	}
 
+
 	// private metoder til BSTree
-	private Node findParent(Node n){ 
-		// Finner nodens forelder
+	
+	private Node findParent(Node n){
+		if (root == n || root == null) {
+			return null;
+		}
+		else {
+			return findParent(n, root);
+		}
+	}
+
+	private Node findParent(Node n, Node subRoot) {
+		if (subRoot.left == n || subRoot.right == n) {
+			return subRoot;
+		}
+
+		else if (n.value < subRoot.value) {
+			subRoot = n.left;
+			return(findParent(n, subRoot));
+
+		}
+
+		else if (n.value > subRoot.value) {
+			subRoot = n.right;
+			return(findParent(n, subRoot));
+		}
 		return null;
-	} 
+	}
+
 
 	private Node findGrandparent(Node n){ 
 		// Finner nodens besteforelder
 		return null;
 	}
 
+
+
 	private Node find(int value){ 
-		// Finner noden på gitt indeks.
-		return null;
+		if (root == null) {
+			return null;
+		}
+		else {
+			return find(value, root);
+		}
 	}
+
+	private Node find(int value, Node subRoot) {
+		if (value == subRoot.value) {
+			return subRoot;
+		}
+		else if (value < subRoot.value) {
+			if (subRoot.left == null) { return null; }		// Sjekker om neste node er null, ergo finnes ikke input value i treet
+			return find(value, subRoot.left);
+		} 
+		else {
+			if (subRoot.right == null) { return null; }
+			return find(value, subRoot.right);
+		}
+
+	}
+
+
 
 	// Metoder fra BSTOper
 
@@ -84,6 +130,7 @@ public class BSTree implements BSTOper {
 		}
 	}
 
+	/*
 	public int size() {
 		int teller = 0;
 
@@ -91,7 +138,24 @@ public class BSTree implements BSTOper {
 			return teller;
 		}
 		else {
-			return teller;	// IKEK FERDIG
+			size(teller, root);
+	}
+
+	private int size(int teller, Node subtreeRoot) {
+		while (subtreeRoot.left != null) {
+
+		}
+	}
+	*/
+
+	public boolean existsInTree(int value) {
+		if (find(value) == null) {
+			System.out.println("Noden finnes ikke i treet");
+			return false;
+		}
+		else {
+			System.out.println("Noden FINNES i treet");
+			return true;
 		}
 	}
 
@@ -99,7 +163,6 @@ public class BSTree implements BSTOper {
 
 	/*
 	public boolean remove(int value);
-	public boolean existsInTree(int value); 
 	public int findNearestSmallerThan(int value); 
 	public void addAll(int[] integers);
 	public int[] sortedArray() ; // inorder
