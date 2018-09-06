@@ -24,7 +24,6 @@ class BSTtest {
                 intarr = tallrekke(ant);
                 for (int i : intarr) { 
                     testtre.add(i);
-                    testtre.findParent(i);
                 }
                 
                 //testtre.existsInTree(3);
@@ -44,7 +43,6 @@ class BSTtest {
             //intarr = testtre.preorderArray();
             for (int i : intarr) { 
                 System.out.println(i); 
-                testtre.findParent(i);
 }
             //intarr = testtre.sortedArray();
             for (int i : intarr) { 

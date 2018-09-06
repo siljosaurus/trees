@@ -130,23 +130,25 @@ public class BSTree implements BSTOper {
 		}
 	}
 
-	/*
+		
 	public int size() {
-		int teller = 0;
-
 		if (root == null) {
-			return teller;
+			return 0;
 		}
 		else {
-			size(teller, root);
-	}
-
-	private int size(int teller, Node subtreeRoot) {
-		while (subtreeRoot.left != null) {
-
+			return size(root);
 		}
 	}
-	*/
+
+	private int size(Node subRoot) {
+		if (subRoot == null) {
+			return 0;
+		}
+		else {
+			return(size(subRoot.left) + 1 + size(subRoot.right));
+		}
+	}
+	
 
 	public boolean existsInTree(int value) {
 		if (find(value) == null) {
