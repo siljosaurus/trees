@@ -23,7 +23,7 @@ class BSTtest {
             for (int ant=1; ant <= 100000000; ant=ant*10) {
                 intarr = tallrekke(ant);
                 for (int i : intarr) { 
-                    testtre.add(i);
+                    //testtre.add(i);
                 }
                 
                 //testtre.existsInTree(3);
@@ -49,5 +49,7 @@ class BSTtest {
                 System.out.println(i); 
             }
         }
+
+        
     }
 }

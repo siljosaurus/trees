@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class BSTree implements BSTOper {
 
 	private class Node {
@@ -32,13 +34,14 @@ public class BSTree implements BSTOper {
 		root.value = rootValue;
 	}
 
-
 	// private metoder til BSTree
 	
 	private Node findParent(Node n){
 		if (root == n || root == null) {
+			System.out.println("No parent");
 			return null;
 		}
+
 		else {
 			return findParent(n, root);
 		}
@@ -46,13 +49,13 @@ public class BSTree implements BSTOper {
 
 	private Node findParent(Node n, Node subRoot) {
 		if (subRoot.left == n || subRoot.right == n) {
+			System.out.println("Parent: " + subRoot);
 			return subRoot;
 		}
 
 		else if (n.value < subRoot.value) {
 			subRoot = n.left;
 			return(findParent(n, subRoot));
-
 		}
 
 		else if (n.value > subRoot.value) {
@@ -64,16 +67,47 @@ public class BSTree implements BSTOper {
 
 
 	private Node findGrandparent(Node n){ 
-		// Finner nodens besteforelder
-		return null;
+		if (root == n || root == null) {
+			return null;
+		}
+
+		else {
+			return findGrandparent(n, root);
+		}
 	}
 
+	private Node findGrandparent(Node n, Node subRoot) {
+		if (subRoot.left == n || subRoot.right == n) {
+			Node parent = findParent(n);
+			Node grandParent = findParent(parent);
+			System.out.println("Grandparent :" + grandParent);
+			return grandParent;
+		}
+
+		else if (n.value < subRoot.value) {
+			subRoot = n.left;
+			Node parent = findParent(subRoot);
+			Node grandParent = findParent(parent);
+			System.out.println("Grandparent :" + grandParent);
+			return grandParent;
+		}
+
+		else if (n.value > subRoot.value) {
+			subRoot = n.right;
+			Node parent = findParent(subRoot);
+			Node grandParent = findParent(parent);
+			System.out.println("Grandparent :" + grandParent);
+			return grandParent;
+		}
+		return null;
+	}
 
 
 	private Node find(int value){ 
 		if (root == null) {
 			return null;
 		}
+
 		else {
 			return find(value, root);
 		}
@@ -83,20 +117,26 @@ public class BSTree implements BSTOper {
 		if (value == subRoot.value) {
 			return subRoot;
 		}
+
 		else if (value < subRoot.value) {
 			if (subRoot.left == null) { return null; }		// Sjekker om neste node er null, ergo finnes ikke input value i treet
 			return find(value, subRoot.left);
-		} 
+		}
+
 		else {
 			if (subRoot.right == null) { return null; }
 			return find(value, subRoot.right);
 		}
-
 	}
 
-
-
 	// Metoder fra BSTOper
+
+	public void testMetode(int value) {
+		Node node = find(value);
+		findParent(node);
+		//findGrandparent(node);
+
+	}
 
 	public void add(int value) {
 		if (root == null) {
@@ -109,28 +149,28 @@ public class BSTree implements BSTOper {
 		}
 	}
 
-	private void add(int value, Node node) {
-		if (value < node.value) {
-			if (node.left == null) {
+	private void add(int value, Node subRoot) {
+		if (value < subRoot.value) {
+			if (subRoot.left == null) {
 				Node nyNode = new Node(value);
-				node.left = nyNode;
+				subRoot.left = nyNode;
 				System.out.println("Inserted a new Node " + nyNode.value);
 				return;
 			}
-			add(value, node.left);
+			add(value, subRoot.left);
 
-		} else if (value >= node.value) {
-			if (node.right == null) {
+		} else if (value >= subRoot.value) {
+			if (subRoot.right == null) {
 				Node nyNode = new Node(value);
-				node.right = nyNode;
+				subRoot.right = nyNode;
 				System.out.println("Inserted a new Node " + nyNode.value);
 				return;
 			}
-			add(value, node.right);
+			add(value, subRoot.right);
 		}
 	}
 
-		
+	// Returns number of nodes in the tree	
 	public int size() {
 		if (root == null) {
 			return 0;
@@ -140,6 +180,7 @@ public class BSTree implements BSTOper {
 		}
 	}
 
+	// Returns number of nodes in the tree
 	private int size(Node subRoot) {
 		if (subRoot == null) {
 			return 0;
@@ -162,13 +203,54 @@ public class BSTree implements BSTOper {
 	}
 
 
+	public ArrayList<Integer> sortedArray() {
+		
+		if (root != null) {
+			ArrayList<Integer> sortert = new ArrayList<Integer>();
+			inorder(root, sortert);
+			int counter = 0;
+			return sortert;
+		}
+		return null;
+	}
+	
+	// Inorder, tilhører sortedArray
+	private void inorder(Node subRoot, ArrayList<Integer> sortertRef) {
+		ArrayList<Integer> sortert = sortertRef;
+
+		if (subRoot.left != null) {
+			inorder(subRoot.left, sortert);
+		}
+
+		sortert.add(subRoot.value);
+
+		if (subRoot.right != null) {
+			inorder(subRoot.right, sortert);
+		}
+	}
+
+
+
+/*
+	public void addAll(ArrayList integers) {	// 
+		if ()
+	}
+
+	private void addAll(ArrayList integers) {
+		if (l > h) {
+			return;
+		}
+
+		venstrekall = (arrayRef, l, (root-1));
+		hoyrekall = (arrayRef, (m+1), h);
+
+	}
+*/
 
 	/*
 	public boolean remove(int value);
 	public int findNearestSmallerThan(int value); 
-	public void addAll(int[] integers);
-	public int[] sortedArray() ; // inorder
-	public int[] findInRange (int low, int high);
+	public int[] findInRange (int low, int high);	// side 101 i boken.
 	*/
 
 
