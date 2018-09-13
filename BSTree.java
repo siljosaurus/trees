@@ -1,4 +1,4 @@
-import java.util.Arrays;	// Denne er importert fordi den brukes i metoden findInRange, der jeg bruker en toString for å se elementer i array.
+import java.util.Arrays;	// Denne er importert fordi den kan brukes i metoden findInRange, der jeg bruker en toString for å se elementer i array.
 
 public class BSTree implements BSTOper {
 
@@ -259,13 +259,12 @@ public class BSTree implements BSTOper {
 			int[] inRange = new int[size()];	// Bruker .size for da er jeg sikker på at det alltid er plass
 			findInRange(low, high, inRange, root);
 			RANGECOUNTER = 0;
-			//System.out.println(Arrays.toString(inRange)); //<<--- Kan bruke denne for å se innholdet i listen i terminalen
+			System.out.println(Arrays.toString(inRange)); //<<--- Kan bruke denne for å se innholdet i listen i terminalen
 			return inRange;
 		}
 	}
 
 	// Bruker inorder traversal her også, bygget opp på akkurat samme måte som sortedArray
-
 	private void findInRange(int low, int high, int[] inRangeRef, Node subRoot) {
 		int[] inRange = inRangeRef;
 
@@ -284,14 +283,13 @@ public class BSTree implements BSTOper {
 	}
 
 
-	// Tar imot en array med verdier, og legger disse til i treet
+	// Tar imot en array med tilfeldige verdier, og legger disse til i treet
 	public void addAll(int[] integers) {
 		for (int i : integers) {
 			add(integers[i]);
 		}
 
-		// Dersom du vet at listen er sortert kan du kalle på denne:
-		// addAllSorted(integers, 0, integers.length -1);
+		// addAllSorted(integers, 0, integers.length -1);	// <<-- Dersom du vet at int[] integers er sortert
 	}
 
 	// Denne har jeg og en venn jobbet LENGE med før vi forsto hva addAll faktisk skulle gjøre, så den legger 
@@ -311,6 +309,7 @@ public class BSTree implements BSTOper {
 	// Fjerner et node objekt
 	public boolean remove(int value) {
 		Node n = find(value);
+		System.out.println("Root: " + root.value);
 
 		if (n == null || root == null) {
 			System.out.println("Value do not exist in tree");
@@ -335,13 +334,20 @@ public class BSTree implements BSTOper {
 
 			if (subRoot.left != null && subRoot.right != null) {	// root har 2 barn
 				Node nearestSmaller = find(findSmallestValue(subRoot.right));
-				Node parent = findParent(nearestSmaller);
 
-				subRoot.value = nearestSmaller.value;
-				parent.left = nearestSmaller.right;
-				return true;
+				// Spesialtilfelle: dersom nearestSmaller == subroot.right
+				if (nearestSmaller == subRoot.right) {
+					nearestSmaller.left = subRoot.left;
+					root = nearestSmaller;
+					return true;
+				}
+				else {
+					Node parent = findParent(nearestSmaller);
+					subRoot.value = nearestSmaller.value;
+					parent.left = nearestSmaller.right;
+					return true;
+				}
 			}
-
 			if (subRoot.left != null) {		// root har 1 venstrebarn
 				root = subRoot.left;
 				return true;
@@ -375,12 +381,13 @@ public class BSTree implements BSTOper {
 			if (subRoot.left != null && subRoot.right != null ) {
 				Node nearestSmaller = find(findSmallestValue(subRoot.right));
 				Node parent = findParent(nearestSmaller);
+				
+				// Spesialtilfelle: dersom parent er subRoot
 				if (parent == subRoot) { 
 					subRoot.value = nearestSmaller.value;
 					parent.right = nearestSmaller.right;
 					return true;
 				}
-
 
 				else {
 					subRoot.value = nearestSmaller.value;
@@ -438,5 +445,4 @@ public class BSTree implements BSTOper {
 		}
 		return 0;
 	}
-
 }

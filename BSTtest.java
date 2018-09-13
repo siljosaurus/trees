@@ -25,10 +25,10 @@ class BSTtest {
                 for (int i : intarr) { 
                     testtre.add(i); 
                 }
-                System.out.print("" + ant);    // n
-                System.out.print("         " +testtre.size() + "");  // antall
+                System.out.printf("%1s", ant);    // n
+                System.out.printf("%10s", testtre.size());  // antall
                 //System.out.print(" " + testtre.height());
-                System.out.println("         " + testtre.findNearestSmallerThan(2000000000));    // findNearestSmallerThan
+                System.out.printf("%16s", testtre.findNearestSmallerThan(2000000000)+ "\n");    // findNearestSmallerThan
             }
 
         }
@@ -46,7 +46,7 @@ class BSTtest {
 
             // EGNE TESTER:
 
-            int tall = 56666777;
+            int tall = 1438708838;
             int nearestSmallest = testtre.findNearestSmallerThan(tall);
             System.out.println("In range of: " + testtre.findInRange(-1577698714, 1690759767));
             System.out.println("'" +tall + "' Exists in tree: " + testtre.existsInTree(tall));
@@ -58,7 +58,7 @@ class BSTtest {
             System.out.println("'" +tall + "' Exists in tree: " + testtre.existsInTree(tall));
 
 
-            System.out.println("In range of: " + testtre.findInRange(-1577698714, 1690759767));
+            System.out.println("In range of: " + testtre.findInRange(-1577698714, 1665674363));
 
         }
     }
