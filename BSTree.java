@@ -309,7 +309,6 @@ public class BSTree implements BSTOper {
 	// Fjerner et node objekt
 	public boolean remove(int value) {
 		Node n = find(value);
-		System.out.println("Root: " + root.value);
 
 		if (n == null || root == null) {
 			System.out.println("Value do not exist in tree");
@@ -321,18 +320,20 @@ public class BSTree implements BSTOper {
 		}
 	}
 
-
+	// Tar gjerne imot tips på hvordan jeg kunne løst denne metoden rekursivt :)
 	private boolean remove(int value, Node subRoot) {
 		
 		// Tilfelle 0: subRoot er root
 		if (subRoot == root ) {
 
-			if (subRoot.left == null && subRoot.right == null) {	// root er bladnode
+			// root er bladnode
+			if (subRoot.left == null && subRoot.right == null) {
 				root = null;
 				return true;
 			}
 
-			if (subRoot.left != null && subRoot.right != null) {	// root har 2 barn
+			// root har 2 barn
+			if (subRoot.left != null && subRoot.right != null) {
 				Node nearestSmaller = find(findSmallestValue(subRoot.right));
 
 				// Spesialtilfelle: dersom nearestSmaller == subroot.right
@@ -341,6 +342,7 @@ public class BSTree implements BSTOper {
 					root = nearestSmaller;
 					return true;
 				}
+
 				else {
 					Node parent = findParent(nearestSmaller);
 					subRoot.value = nearestSmaller.value;
@@ -348,12 +350,15 @@ public class BSTree implements BSTOper {
 					return true;
 				}
 			}
-			if (subRoot.left != null) {		// root har 1 venstrebarn
+
+			// root har 1 venstrebarn
+			if (subRoot.left != null) {
 				root = subRoot.left;
 				return true;
 			}
 
-			if (subRoot.right != null) {	// root har 1 høyrebarn
+			// root har 1 høyrebarn
+			if (subRoot.right != null) {
 				root = subRoot.right;
 				return true;
 			}
@@ -363,12 +368,14 @@ public class BSTree implements BSTOper {
 		if (subRoot.left == null && subRoot.right == null) {
 			Node parent = findParent(subRoot);
 			
-			if (parent.left.value == subRoot.value) {	// Dersom Noden er på venstresiden av root
+			// Dersom Noden er på venstresiden av root
+			if (parent.left.value == subRoot.value) {
 				parent.left = null;
 				return true;
 			}
-				
-			else if (parent.right.value == subRoot.value) {	// Dersom Noden er på høyresiden av root
+			
+			// Dersom Noden er på høyresiden av root
+			else if (parent.right.value == subRoot.value) {
 				parent.right = null;
 				return true;
 			}
@@ -399,24 +406,39 @@ public class BSTree implements BSTOper {
 			// subRoot har 1 venstrebarn
 			else if (subRoot.left != null) {
 				Node parent = findParent(subRoot.left);
- 
-				if (parent.left == subRoot) { parent.left = subRoot.left;}
-				else { parent.right = subRoot.left; }
-				return true;
+ 				
+ 				// Spesialtilfelle: dersom parent == subRoot
+				if (parent.left == subRoot) { 
+					parent.left = subRoot.left;
+					return true;
+				}
+
+				else { 
+					parent.right = subRoot.left;
+					return true;
+				}
 			}
 
 			// subRoot har 1 høyrebarn
 			else if (subRoot.right != null) {
 				Node parent = findParent(subRoot.right);
-				if (parent.left == subRoot) { parent.left = subRoot.right;}
-				else { parent.right = subRoot.right; }
-				return true;
+				
+				// Spesialtilfelle: dersom parent == subRoot
+				if (parent.left == subRoot) { 
+					parent.left = subRoot.right;
+					return true;
+				}
+
+				else { 
+					parent.right = subRoot.right;
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
-	// Hjelpemetode til remove
+	// Hjelpemetode til remove. Brukes til å traverserse seg helt ned i en "venstregren"
 	private int findSmallestValue(Node n) {
     	if (n.left == null) {
       		return n.value;
@@ -425,24 +447,28 @@ public class BSTree implements BSTOper {
       		return findSmallestValue(n.left);
     	}
   	}
-
 	
-	// Kunne tenkt meg en tilbakemelding på hvordan man kunne ha løst denne rekursivt :)
-	public int findNearestSmallerThan(int value) {
-		Node n = find(value); 
-		if (n == null || root == null) {
-			return 0;
-		}
 
-		else {
-			int[] sortert = sortedArray();
-			for (int i = 1; i < sortert.length; i++) {
-				int sjekk = sortert[i];
-				if (sjekk == value) {
-					return sortert[i-1];
-				}
-			}
-		}
-		return 0;
-	}
+	// Denne metoden er inorder-traversering inspirert, til å gå gjennom treet for å finne det nest minste tallet før value
+	public int findNearestSmallerThan(int value){
+    	if (root == null) {
+    		return 0;
+    	}
+    	return findNearestSmallerThan(value, root, 0);
+  	}
+
+	private int findNearestSmallerThan(int value, Node subRoot, int low) {
+    	if (subRoot.left != null) {
+    		low = findNearestSmallerThan(value, subRoot.left, low);
+    	}
+    
+    	if (subRoot.value >= low && subRoot.value < value) {
+      		low = subRoot.value;
+    	}
+    
+    	if (subRoot.right != null){
+      		low = findNearestSmallerThan(value, subRoot.right, low);
+    	}
+    	return low;
+  	}
 }
